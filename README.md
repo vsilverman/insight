@@ -18,7 +18,7 @@ This repository contains the sources for Vlad Silverman's 2019 Insight DevOps pr
 6. [Conclusion](README.md#conclusion)
 7. [Future Work](README.md#future-work)
     * CI/CD with Jenkins
-    * Docker + ECS Containerization for Flask
+    * Docker + ECS Containerization for web service
     * AWS RDS for Postgres
 
 ## Introduction
@@ -37,7 +37,10 @@ The proposed DevOps pipeline is an example of an immutable infrastructure where 
 
 Terraform is used to setup the virtual private cloud (VPC) and other security group settings.
 
-The figure above shows two subnets: public and private. Flask uses the public subnet which is connected to the internet through the internet gateway. The remaining data pipeline components (i.e., Spark and PostgreSQL) reside in the private subnet since the outside internet should not have access to these components. In addition to setting up the VPC, Terraform also sets up the security groups which limit communication between components to specific ports. Terraform is also used to spin up the amazon machine images (AMIs) created by Packer and configures them accordingly.
+There should be two subnets: public and private. 
+Web server uses the public subnet which is connected to the internet through the internet gateway. 
+The remaining data pipeline components (i.e., Proxy and PostgreSQL service) reside in the private subnet since the outside internet should not have access to these components. 
+In addition to setting up the VPC, Terraform also sets up the security groups which limit communication between components to specific ports. Terraform is also used to spin up the amazon machine images (AMIs) created by Packer and configures them accordingly.
 
 ### Packer
 
@@ -108,9 +111,9 @@ Below are some specific work items to incorporate Jenkins for CI/CD:
 As Jenkins alternative CI/CD tool CircleCI may be used for smaller projects, which nicely integrates with GitHub.
 Another CI/CD alternative may be GitHub Actions, newly released directly from GitHub 
 
-### Docker + ECS Containerization for Flask
+### Docker + ECS Containerization for Httpd
 
-Containers are MB instead of GB in size compared to VMs, and take seconds rather than minutes to spin up. Flask is a good candidate for containerization as it requires low OS overhead, and needs to be quickly spun up or down based on user-demand. We can use Docker to containerize Flask. This is done by creating a `DockerFile` that performs many of the same tasks as Packer in order to create a Flask Docker image. Docker can be used in conjunction with AWS elastic container service (ECS) or AWS elastic Kubernetes service (EKS) for container orchestration. A container orchestration tool:
+Containers are MB instead of GB in size compared to VMs, and take seconds rather than minutes to spin up. Httpd is a good candidate for containerization as it requires low OS overhead, and needs to be quickly spun up or down based on user-demand. We can use Docker to containerize Httpd service. This is done by creating a `DockerFile` that performs many of the same tasks as Packer in order to create a TBD Docker image. Docker can be used in conjunction with AWS elastic container service (ECS) for container orchestration. A container orchestration tool:
 * Defines the relationship between containers.
 * Sets up container auto-scaling.
 * Defines how containers connect with the internet.
