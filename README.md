@@ -1,4 +1,4 @@
-# DO INSIGHT
+# Hashi Mesh Services
 
 This repository contains the sources for Vlad Silverman's 2019 Insight DevOps project.
 
