@@ -1,6 +1,7 @@
-# Hashi Mesh Services
+# Hashi Service Mesh
 
-This repository contains the sources for Vlad Silverman's 2019 Insight DevOps project.
+This repository contains the sources for Vlad Silverman's 2019 
+Insight DevOps project.
 
 ## Table of Contents
 
@@ -23,28 +24,53 @@ This repository contains the sources for Vlad Silverman's 2019 Insight DevOps pr
 
 ## Introduction
 
-The goal of this project is to automate the deployment of an application onto AWS by writing infrastructure as code (IaC), and manage container communication by using mesh services approach. The DevOps pipeline will use Terraform and Packer for automatic deployment, and Git for version control.
+The goal of this project is to automate the deployment of an 
+application onto AWS by writing infrastructure as code (IaC), 
+and manage container communication by using service mesh 
+approach. The DevOps pipeline will use Terraform and Packer 
+for automatic deployment, and Git for version control.
 
 ## DevOps Pipeline
 
 ### Overview
 
-The DevOps pipeline will write infrastructure as code (IaC) using Terraform and Packer and version control the application and IaC using Git.
+The DevOps pipeline will write infrastructure as code (IaC) 
+using Terraform and Packer and version control the application 
+and IaC using Git.
 
-The proposed DevOps pipeline is an example of an immutable infrastructure where once an instance is launched, it is never changed, only replaced. The benefits of an immutable infrastructure include more consistency and reliability in addition to a simpler, more predictable deployment process.
+The proposed DevOps pipeline is an example of an immutable 
+infrastructure where once an instance is launched, it is never 
+changed, only replaced. The benefits of an immutable infrastructure 
+include more consistency and reliability in addition to a simpler, 
+more predictable deployment process.
 
 ### Terraform
 
-Terraform is used to setup the virtual private cloud (VPC) and other security group settings.
+Terraform is used to setup the virtual private cloud (VPC) and 
+other security group settings.
 
 There should be two subnets: public and private. 
-Web server uses the public subnet which is connected to the internet through the internet gateway. 
-The remaining data pipeline components (i.e., Proxy and PostgreSQL service) reside in the private subnet since the outside internet should not have access to these components. 
-In addition to setting up the VPC, Terraform also sets up the security groups which limit communication between components to specific ports. Terraform is also used to spin up the amazon machine images (AMIs) created by Packer and configures them accordingly.
+Web server uses the public subnet which is connected to the 
+internet through the internet gateway. 
+The remaining data pipeline components (i.e., Proxy and PostgreSQL 
+service) reside in the private subnet since the outside internet 
+should not have access to these components. 
+In addition to setting up the VPC, Terraform also sets up the 
+security groups which limit communication between components to 
+specific ports. Terraform is also used to spin up the amazon 
+machine images (AMIs) created by Packer and configures them accordingly.
 
 ### Packer
 
-Packer is used to create the Amazon machine images (AMI) for each of the components (i.e., Httpd and PostgreSQL) of the data engineering pipeline. The AMIs use a base Ubuntu image and installs the required software.
+Packer is used to create the Amazon machine images (AMI) for each 
+of the components (i.e., Httpd, Consul and PostgreSQL) of the 
+data engineering pipeline. The AMIs use a base Ubuntu image and 
+installs the required software.
+
+Example, showing how above tools were used in this project to 
+build, do sanity tests and deploy consul-ubuntu image is 
+published in the following draft  
+[video](https://www.youtube.com/watch?v=qYGJg2jEsDs).
 
 ## Build Instructions
 
@@ -70,16 +96,25 @@ Clone the repository:
 
 Running `build.sh` performs the following:
 
-* Calls Packer to build the Postgres, and Httpd AMIs.
-* Calls Terraform to spin up the cluster with Httpd and Postgresql.
+* Calls Packer to build the Postgres, Consul and Httpd AMIs.
+* Calls Terraform to spin up the cluster with Httpd, Consul and 
+Postgresql.
+
 
 ## Conclusion
 
-In this project, we have automated the deployment of an application onto AWS using a high-reliability infrastructure. We used Terraform and Packer to automate deployment and showed how communication between containers may be organized using mesh services approach.
+In this project, we have automated the deployment of an application 
+onto AWS using a high-reliability infrastructure. We used Terraform 
+and Packer to automate deployment and showed how communication 
+between containers may be organized using mesh services approach.
 
 ## Future Work
 
 ### CI/CD with Jenkins
+
+Integration of above steps into CI/CD pipeline may be done similar 
+to the following 
+[Continuous Integration project](https://vsilverman.github.io/jenkins-ci/)
 
 The developer-to-customer pipeline is summarized below:
 1. Developer
@@ -89,7 +124,10 @@ The developer-to-customer pipeline is summarized below:
 5. Provision and Deploy
 6. Customer
 
-Terraform and Packer handles steps 4 and 5. However, we still need a CI/CD tool (e.g., Jenkins) to handle steps 2 and 3, and to automatically trigger Terraform and Packer to perform steps 4 and 5. CI/CD using Jenkins is summarized below:
+Terraform and Packer handles steps 4 and 5. However, we still need 
+a CI/CD tool (e.g., Jenkins) to handle steps 2 and 3, and to 
+automatically trigger Terraform and Packer to perform steps 4 and 5. 
+The implementation of CI/CD using Jenkins is summarized below:
 * Developer pushes code into source Git repository.
 * Jenkins detects the change and automatically triggers:
     + Packer to build the AMIs in the staging environment.
