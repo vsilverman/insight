@@ -1,7 +1,8 @@
 # Hashi Service Mesh
 
 This repository contains the sources for Vlad Silverman's 2019 
-Insight DevOps project.
+Insight DevOps project. Initial presentation of the project may be viewed 
+[here](https://github.com/vsilverman/insight/blob/master/Vlad_Silverman_Hashi_Service_Mesh.pdf).
 
 ## Table of Contents
 
